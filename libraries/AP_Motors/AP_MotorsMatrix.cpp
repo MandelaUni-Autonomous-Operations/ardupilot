@@ -18,6 +18,7 @@
 #include <AP_Vehicle/AP_Vehicle_Type.h>
 
 extern const AP_HAL::HAL& hal;
+AP_Motors::motor_frame_type frameType;
 
 // init
 void AP_MotorsMatrix::init(motor_frame_class frame_class, motor_frame_type frame_type)
@@ -25,6 +26,7 @@ void AP_MotorsMatrix::init(motor_frame_class frame_class, motor_frame_type frame
     // record requested frame class and type
     _active_frame_class = frame_class;
     _active_frame_type = frame_type;
+    frameType = frame_type;
 
     if (frame_class == MOTOR_FRAME_SCRIPTING_MATRIX) {
         // if Scripting frame class, do nothing scripting must call its own dedicated init function
@@ -391,7 +393,27 @@ void AP_MotorsMatrix::output_armed_stabilizing()
     const float throttle_thrust_best_plus_adj = throttle_thrust_best_rpy + thr_adj;
     for (i = 0; i < AP_MOTORS_MAX_NUM_MOTORS; i++) {
         if (motor_enabled[i]) {
-            _thrust_rpyt_out[i] = (throttle_thrust_best_plus_adj * _throttle_factor[i]) + (rpy_scale * _thrust_rpyt_out[i]);
+
+            if (frameType == MOTOR_FRAME_TYPE_MAO_VTOL)
+            {
+                if(i>1)
+                {
+                    _thrust_rpyt_out[i] = (throttle_thrust_best_plus_adj * _throttle_factor[i]) + (rpy_scale * _thrust_rpyt_out[i]);
+                }
+                else
+                {
+
+                    _thrust_rpyt_out[i] = throttle_thrust;
+                }
+
+            }
+            else
+            {
+                _thrust_rpyt_out[i] = (throttle_thrust_best_plus_adj * _throttle_factor[i]) + (rpy_scale * _thrust_rpyt_out[i]);
+            }   
+
+
+            
         }
     }
 
@@ -788,6 +810,15 @@ bool AP_MotorsMatrix::setup_hexa_matrix(motor_frame_type frame_type)
         add_motors(motors, ARRAY_SIZE(motors));
         break;
     }
+    case MOTOR_FRAME_TYPE_MAO_VTOL:
+        _frame_type_string = "MAO_VTOL";
+        add_motor_raw(AP_MOTORS_MOT_1, 0.0f,0.0f,0.0f,1);
+        add_motor_raw(AP_MOTORS_MOT_2, 0.0f,0.0f,0.0f,4);
+        add_motor(AP_MOTORS_MOT_3, -135, AP_MOTORS_MATRIX_YAW_FACTOR_CCW, 5);
+        add_motor(AP_MOTORS_MOT_4,   45, AP_MOTORS_MATRIX_YAW_FACTOR_CCW, 2);
+        add_motor(AP_MOTORS_MOT_5,  -45, AP_MOTORS_MATRIX_YAW_FACTOR_CW,  6);
+        add_motor(AP_MOTORS_MOT_6,  135, AP_MOTORS_MATRIX_YAW_FACTOR_CW,  3);
+        break;
     case MOTOR_FRAME_TYPE_X: {
         _frame_type_string = "X";
         static const AP_MotorsMatrix::MotorDef motors[] {
