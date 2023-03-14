@@ -3,6 +3,8 @@ This repo is a fork of ardupilot to add support for the MAO VTOL airframe
 This repo was created on the 14th of March 2023, the current version of arduplane being Plane 4.3.2
 The changes made to the original ardupilot codebase can be viewed by comparing the commits made by JacquesWelgemoed to the MAO_VTOL branch with the main branch.
 
+*Please the original Ardupilot readme, it has been renamed to Ardupilot readme in this repo*
+
 To build this version of the firmware follow these steps: (This guide assumes you are using an ubuntu installation for your build environment)
 
 **Clone this repository**
