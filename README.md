@@ -44,6 +44,8 @@ cd ardupilot
 ./waf plane
 ```
 
+**Your built firmware file can then be found in the build/<board_target>/bin directory, the file with the .apj extension can be uploaded to your FC using QGroundControl as a custom firmware file**
+
 **Please note all build commands should be run from the root of the ardupilot directory, wherever you cloned that to.**
 
 *This repo contains a temporary fix in the lbraries/AP_GPS/AP_GPS_NMEA.cpp file in lines 779 & 781 to force the pragma statement to run by commenting out the if statement since building was failing with the current ardupilot master*
