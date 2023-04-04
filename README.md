@@ -9,8 +9,7 @@ To build this version of the firmware follow these steps: (This guide assumes yo
 
 **Clone this repository**
 ```
-git clone https://github.com/MandelaUni-Autonomous-Operations
-/ardupilot
+git clone https://github.com/MandelaUni-Autonomous-Operations/ardupilot
 cd ardupilot
 git submodule update --init --recursive
 ```
